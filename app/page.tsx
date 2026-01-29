@@ -135,7 +135,7 @@ export default function Home() {
                     <div className="flex-1 relative group/input mb-4">
                         <textarea 
                             className="w-full h-full bg-[#0f1923]/80 border-2 border-gray-700 hover:border-gray-500 rounded p-4 text-white placeholder:text-gray-600 focus:border-[#ff4655] focus:ring-0 focus:outline-none resize-none font-mono text-sm transition-all shadow-inner custom-scrollbar"
-                            placeholder="Muffinsgram&#10;JettMain&#10;SovaLineups&#10;..."
+                            placeholder="Muffinsgram"
                             value={playerInput}
                             onChange={(e) => setPlayerInput(e.target.value)}
                             spellCheck={false}
