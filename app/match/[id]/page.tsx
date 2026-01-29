@@ -2,7 +2,7 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useParams, useSearchParams } from "next/navigation";
-// import Image from "next/image"; // <-- Bunu kaldırdık (Gerekirse kalsın ama kullanmayacağız)
+// import Image from "next/image"; // Image yerine img kullanıyoruz
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import confetti from "canvas-confetti";
@@ -13,7 +13,6 @@ function cn(...inputs: ClassValue[]) { return twMerge(clsx(inputs)); }
 const slantClip = "polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%)";
 const TURN_DURATION = 30; 
 
-// --- GÜNCELLENMİŞ HARİTA LİSTESİ ---
 const MAPS = [
   { id: 1, name: "Ascent", coords: "45°26'BF N 12°20'Q E", atk: 48, def: 52, img: "https://media.valorant-api.com/maps/7eaecc1b-4337-bbf6-6ab9-04b8f06b3319/splash.png" },
   { id: 2, name: "Bind", coords: "34°2'A N 6°51'Z W", atk: 51, def: 49, img: "https://media.valorant-api.com/maps/2c9d57ec-4431-9c5e-2939-8f9ef6dd5cba/splash.png" },
@@ -36,6 +35,7 @@ export default function MatchPage() {
   const [myRole, setMyRole] = useState<'A' | 'B' | 'SPECTATOR'>('SPECTATOR');
   const [timeLeft, setTimeLeft] = useState(TURN_DURATION);
   const [isMuted, setIsMuted] = useState(false);
+  
   const isProcessingRef = useRef(false);
   const prevBannedCountRef = useRef(0);
 
@@ -186,7 +186,6 @@ export default function MatchPage() {
        <div className="absolute inset-0 z-0 pointer-events-none">
            <AnimatePresence mode="wait">
                <motion.div key={isFinished ? 'finished' : 'veto'} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0">
-                   {/* DÜZELTME: <Image> YERİNE <img> KULLANILDI */}
                    <img src={isFinished ? remainingMaps[0].img : "https://media.valorant-api.com/maps/2bee0dc9-4ffe-519b-1cbd-7fbe763a6047/splash.png"} alt="bg" className={cn("object-cover w-full h-full transition-all duration-1000", isFinished ? "opacity-30 blur-sm scale-105" : "opacity-10 grayscale")} />
                </motion.div>
            </AnimatePresence>
@@ -246,7 +245,7 @@ export default function MatchPage() {
              </div>
              <div className="mt-8 bg-black/40 p-4 rounded border border-white/10 font-mono text-[10px] h-64 overflow-hidden flex flex-col relative">
                  <div className="text-gray-500 font-bold uppercase tracking-widest mb-2 border-b border-gray-700 pb-1 flex justify-between"> <span>SYSTEM LOG</span> <span className={cn("w-2 h-2 rounded-full", isWaitingStart ? "bg-yellow-400" : isTimerEnabled ? "bg-green-500 animate-pulse" : "bg-gray-500")}></span> </div>
-                 <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col-reverse gap-2"> {actionLog.map((log, i) => ( <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex gap-2 items-center"> <span className="text-gray-600">[{i + 1}]</span> <span className={cn("font-bold", log.team?.includes('A') ? "text-[#ff4655]" : "text-[#00e1ff]")}>{log.team}</span> <span className="text-gray-400">BANNED</span> <span className="text-white font-bold">{log.mapName?.toUpperCase()}</span> </motion.div> ))} {isWaitingStart && <div className="text-yellow-500/50 italic animate-pulse">WAITING FOR START...</div>} </div>
+                 <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col-reverse gap-2"> {actionLog.map((log: any, i: number) => ( <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex gap-2 items-center"> <span className="text-gray-600">[{i + 1}]</span> <span className={cn("font-bold", log.team?.includes('A') ? "text-[#ff4655]" : "text-[#00e1ff]")}>{log.team}</span> <span className="text-gray-400">BANNED</span> <span className="text-white font-bold">{log.mapName?.toUpperCase()}</span> </motion.div> ))} {isWaitingStart && <div className="text-yellow-500/50 italic animate-pulse">WAITING FOR START...</div>} </div>
                  <button onClick={() => setIsMuted(!isMuted)} className="absolute bottom-2 right-2 text-gray-500 hover:text-white transition-colors"> {isMuted ? <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" /></svg> : <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>} </button>
              </div>
           </div>
@@ -256,7 +255,6 @@ export default function MatchPage() {
               {isSideSelectPhase && (
                   <motion.div initial={{ opacity: 0, backdropFilter: "blur(0px)" }} animate={{ opacity: 1, backdropFilter: "blur(10px)" }} exit={{ opacity: 0 }} className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/60">
                       <div className="mb-8 relative group w-96 aspect-video rounded-xl overflow-hidden border-4 border-white shadow-[0_0_50px_rgba(255,255,255,0.2)]"> 
-                          {/* DÜZELTME: <Image> YERİNE <img> KULLANILDI */}
                           <img src={remainingMaps[0].img} alt={remainingMaps[0].name} className="object-cover w-full h-full" /> 
                           <div className="absolute inset-0 flex items-center justify-center bg-black/40"> <h1 className="text-6xl font-black italic text-white drop-shadow-lg uppercase tracking-widest">{remainingMaps[0].name}</h1> </div> 
                       </div>
@@ -315,7 +313,6 @@ export default function MatchPage() {
                       const showHover = isMyTurn && !isBanned;
                       return (
                           <motion.div key={map.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: index * 0.05 }} onClick={() => isMyTurn && handleBan(map.id)} className={cn("relative aspect-[16/9] group transition-all duration-300 overflow-hidden", isBanned ? "cursor-not-allowed" : showHover ? "cursor-pointer z-10 scale-[1.03] shadow-[0_10px_30px_rgba(0,0,0,0.5)]" : "opacity-70 hover:opacity-100")} style={{ clipPath: slantClip }}>
-                              {/* DÜZELTME: <Image> YERİNE <img> KULLANILDI */}
                               <img src={map.img} alt={map.name} className={cn("object-cover w-full h-full transition-transform duration-700", isBanned ? "grayscale contrast-125" : "group-hover:scale-110")} />
                               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
                               {!isBanned && <div className="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity"><div className="bg-black/60 backdrop-blur px-2 py-1 rounded text-[8px] font-mono border border-white/10"><span className="text-[#ff4655]">ATK %{map.atk}</span> <span className="text-gray-500">/</span> <span className="text-[#00e1ff]">DEF %{map.def}</span></div></div>}
@@ -332,7 +329,7 @@ export default function MatchPage() {
           <div className="w-72 hidden xl:flex flex-col bg-gradient-to-l from-[#1c252e] to-[#1c252e]/50 border-l border-white/5 p-6 backdrop-blur-sm items-end">
              <div className="text-[#00e1ff] font-black text-sm uppercase tracking-widest mb-4 border-b border-[#00e1ff]/20 pb-2 w-full text-right">Kadro B</div>
              <div className="space-y-2 w-full">
-                {team_b && team_b.map((player: string, i: number) => { const isCaptain = i === captain_b_index; return ( <div key={i} onClick={() => changeCaptain('B', i)} className={cn("relative group flex flex-row-reverse items-center gap-4 p-3 rounded transition-all", isCaptain ? "bg-[#00e1ff]/20 border-r-2 border-[#00e1ff]" : "hover:bg-white/5 border-r-2 border-transparent", myRole === 'B' ? "cursor-pointer" : "cursor-default")}> <div className="w-8 h-8 flex items-center justify-center bg-[#2c353e] font-black text-xs shadow text-white rounded skew-x-[-10deg] border border-gray-600 group-hover:border-[#00e1ff] transition-colors">{player.charAt(0)}</div> <span className={cn("font-bold text-sm uppercase truncate flex-1 text-right tracking-wide", isCaptain ? "text-white" : "text-gray-400 group-hover:text-white")}>{player}</span> {isCaptain && <CrownIcon />} </div> ) })}
+                {team_b && team_b.map((player: string, i: number) => { const isCaptain = i === captain_b_index; return ( <div key={i} onClick={() => changeCaptain('B', i)} className={cn("relative group flex flex-row-reverse items-center gap-4 p-3 rounded transition-all", isCaptain ? "bg-[#00e1ff]/20 border-r-2 border-[#00e1ff]" : "hover:bg-white/5 border-r-2 border-transparent", myRole === 'B' ? "cursor-pointer" : "cursor-default")}> <div className="w-8 h-8 flex items-center justify-center bg-[#2c353e] font-black text-xs shadow text-white rounded skew-x-[10deg] border border-gray-600 group-hover:border-[#00e1ff] transition-colors">{player.charAt(0)}</div> <span className={cn("font-bold text-sm uppercase truncate flex-1 text-right tracking-wide", isCaptain ? "text-white" : "text-gray-400 group-hover:text-white")}>{player}</span> {isCaptain && <CrownIcon />} </div> ) })}
              </div>
           </div>
        </div>
